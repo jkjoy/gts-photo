@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>相册</title>
+<!-- bootstrap -->
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+<!-- animate.css -->
+<link rel="stylesheet" href="assets/animate/animate.css" />
+<link rel="stylesheet" href="assets/animate/set.css" />
+<!-- gallery -->
+<link rel="stylesheet" href="assets/gallery/blueimp-gallery.min.css">
+<!-- favicon -->
+<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar animated fadeInLeftBig"></div>
+<!-- Header Starts -->
+<div class="navbar-wrapper">
+      <div class="container">
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation" id="top-nav">
+          <div class="container">
+            <div class="navbar-header">
+              <!-- Logo Starts -->
+              <a class="navbar-brand" href="#home"><img src="images/logo.png" alt="logo"></a>
+              <!-- #Logo Ends -->
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <!-- Nav Starts -->
+            <div class="navbar-collapse  collapse">
+              <ul class="nav navbar-nav navbar-right scroll">
+                 <li class="active"><a href="#works">Home</a></li>
+              </ul>
+            </div>
+            <!-- #Nav Ends -->
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- #Header Starts -->
+<!-- works -->
+<div id="works"  class=" clearfix grid"> 
+<div id="gts-photos"></div>
+<script>
+ fetch('https://ppapi.ima.cm')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); 
+    })  
+    .then(data => {
+        if (!Array.isArray(data)) {
+            throw new Error('Data is not an array');
+        }
+        let html = data.flatMap(item => {
+            if (Array.isArray(item.media_attachments)) {
+                return item.media_attachments.map(attachment => {
+                    let imageUrl = attachment.url;
+                    let title = item.text || '日常'; // 如果有文本就用作标题，没有则默认为'日常'
+                    let caption = formatDate(item.created_at); // 格式化日期
+                    if (!imageUrl) {
+                        throw new Error('Missing image URL');
+                    }
+                    return `   
+                    <figure class="effect-oscar  wowload fadeIn tm-img-wrapper">
+                        <img src="${imageUrl}" alt="img01" class="tm-img"/>
+                         <figcaption>
+                           <h2>${title}</h2>
+                             <p>${caption}<br>
+                                 <a href="${imageUrl}" title="${title}" data-gallery>点击查看</a></p>            
+                        </figcaption>
+                    </figure> 
+                    `;
+                });
+            } else {
+                return [];
+            }
+        });
+        document.querySelector('#gts-photos').innerHTML = html.join('');
+    })
+    .catch(error => console.error('Error:', error));
+// 辅助函数，用于格式化日期
+function formatDate(dateString) {
+    let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
+</script>  
+</div>
+<!-- works -->
+  </div>
+    </div>
+  </div>
+</div>
+<!-- Footer Starts -->
+<div class="footer text-center spacer">
+<p class="wowload flipInX"><a href="#"><i class="fa fa-facebook fa-2x"></i></a> <a href="#"><i class="fa fa-instagram fa-2x"></i></a> <a href="#"><i class="fa fa-twitter fa-2x"></i></a> <a href="#"><i class="fa fa-flickr fa-2x"></i></a> </p>
+Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a>
+</div>
+<!-- # Footer Ends -->
+<a href="#works" class="gototop "><i class="fa fa-angle-up  fa-3x"></i></a>
+<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+    <!-- The container for the modal slides -->
+    <div class="slides"></div>
+    <!-- Controls for the borderless lightbox -->
+    <h3 class="title">Title</h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <!-- The modal dialog, which will be used to wrap the lightbox content -->    
+</div>
+<!-- jquery -->
+<script src="assets/jquery.js"></script>
+<!-- wow script -->
+<script src="assets/wow/wow.min.js"></script>
+<!-- boostrap -->
+<script src="assets/bootstrap/js/bootstrap.js" type="text/javascript" ></script>
+<!-- jquery mobile -->
+<script src="assets/mobile/touchSwipe.min.js"></script>
+<script src="assets/respond/respond.js"></script>
+<!-- gallery -->
+<script src="assets/gallery/jquery.blueimp-gallery.min.js"></script>
+<!-- custom script -->
+<script src="assets/script.js"></script>
+</body>
+</html>
